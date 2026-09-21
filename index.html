@@ -3,17 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para mi amada Scoly Kinzoo - Experiencia Bioluminescente</title>
+    <title>Para mi amada Scoly Kinzoo - Flor de Luz</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Three.js CDN for 3D Coral Rendering -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
@@ -24,74 +20,45 @@
             overflow-x: hidden;
             user-select: none;
         }
+        .font-serif-title { font-family: 'Great Vibes', cursive; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
 
-        .font-serif-title {
-            font-family: 'Great Vibes', cursive;
-        }
-
-        .font-cinzel {
-            font-family: 'Cinzel', serif;
-        }
-
-        /* Underwater Ambient Background */
         .underwater-bg {
-            background: radial-gradient(ellipse at 50% 20%, rgba(14, 116, 144, 0.25) 0%, rgba(3, 10, 22, 1) 80%);
+            background: radial-gradient(ellipse at 50% 20%, rgba(180, 120, 20, 0.18) 0%, rgba(3, 10, 22, 1) 80%);
         }
-
-        /* Glassmorphism Card */
         .glass-card {
             background: rgba(8, 22, 41, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(14, 165, 233, 0.15);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(250, 204, 21, 0.12);
         }
-
-        /* Canvas Floating Canvas Glow */
         .canvas-container {
-            filter: drop-shadow(0 0 25px rgba(244, 114, 182, 0.35));
+            filter: drop-shadow(0 0 25px rgba(250, 204, 21, 0.35));
             transition: filter 1s ease-in-out;
         }
-
         .canvas-container.glowing {
-            filter: drop-shadow(0 0 45px rgba(251, 146, 60, 0.6)) drop-shadow(0 0 20px rgba(56, 189, 248, 0.7));
+            filter: drop-shadow(0 0 55px rgba(250, 204, 21, 0.75)) drop-shadow(0 0 25px rgba(251, 191, 36, 0.9));
         }
-
-        /* Scrollbar Styling */
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-        }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
         .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(56, 189, 248, 0.4);
+            background: rgba(250, 204, 21, 0.4);
             border-radius: 4px;
         }
-
-        /* Typing Cursor Effect */
         .typing-cursor::after {
             content: '❘';
             animation: blink 0.8s infinite;
-            color: #38bdf8;
+            color: #facc15;
             font-weight: 300;
         }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* Water Caustic Ray Effect */
         .caustics {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%, rgba(56,189,248,0.03) 100%);
-            pointer-events: none;
-            z-index: 1;
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,220,120,0.04) 0%, transparent 50%, rgba(250,204,21,0.04) 100%);
+            pointer-events: none; z-index: 1;
         }
     </style>
 </head>
@@ -100,81 +67,68 @@
     <div class="caustics"></div>
     <canvas id="bubbleCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
 
-    <!-- Ambient Audio Toggle Button -->
     <div class="fixed top-4 right-4 z-50">
-        <button id="soundToggle" class="px-4 py-2 rounded-full glass-card text-xs text-cyan-200/90 hover:text-cyan-100 flex items-center gap-2 transition duration-300 border border-cyan-500/30 hover:border-cyan-400">
-            <svg id="soundIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button id="soundToggle" class="px-4 py-2 rounded-full glass-card text-xs text-yellow-200/90 hover:text-yellow-100 flex items-center gap-2 transition duration-300 border border-yellow-500/30 hover:border-yellow-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
             </svg>
-            <span id="soundText">Ecos Marinos</span>
+            <span id="soundText">Ecos de Campo</span>
         </button>
     </div>
 
-    <!-- Dedication Header -->
     <header class="text-center z-10 mt-2 mb-2">
-        <h2 class="text-cyan-400/80 tracking-widest uppercase text-xs font-cinzel mb-1">Para mi amada</h2>
-        <h1 class="text-4xl md:text-6xl font-serif-title text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-orange-300 to-cyan-300 drop-shadow-lg">
+        <h2 class="text-yellow-400/80 tracking-widest uppercase text-xs font-cinzel mb-1">Para mi amada</h2>
+        <h1 class="text-4xl md:text-6xl font-serif-title text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-amber-300 to-orange-300 drop-shadow-lg">
             Scoly Kinzoo
         </h1>
     </header>
 
     <main class="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-6 z-10 my-auto">
-        
-        <!-- Left Column: 3D Scolymia / Coral Flower Rendering Container -->
+
         <div class="w-full lg:w-1/2 flex flex-col items-center justify-center relative min-h-[440px] md:min-h-[500px]">
-            
-            <!-- Radial Glow Backlight -->
-            <div id="coralAura" class="absolute w-80 h-80 rounded-full bg-gradient-to-tr from-pink-500/20 via-cyan-400/20 to-orange-400/20 blur-3xl pointer-events-none opacity-40 transition-all duration-1000"></div>
+            <div id="flowerAura" class="absolute w-80 h-80 rounded-full bg-gradient-to-tr from-yellow-400/30 via-amber-300/25 to-orange-300/20 blur-3xl pointer-events-none opacity-40 transition-all duration-1000"></div>
 
-            <!-- 3D Canvas WebGL Container -->
-            <div id="threeContainer" class="canvas-container relative w-full h-[400px] md:h-[480px] rounded-2xl flex items-center justify-center cursor-grab active:cursor-grabbing">
-                <!-- Three.js Canvas gets injected here -->
-            </div>
+            <div id="threeContainer" class="canvas-container relative w-full h-[400px] md:h-[480px] rounded-2xl flex items-center justify-center cursor-grab active:cursor-grabbing"></div>
 
-            <!-- Interactive Hint & Status -->
             <div class="flex flex-col items-center gap-1 mt-1">
-                <span class="text-[11px] text-cyan-300/60 font-mono tracking-wider flex items-center gap-1">
+                <span class="text-[11px] text-yellow-300/60 font-mono tracking-wider flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
                     Arrastra para rotar &bull; Ruleta para zoom
                 </span>
-                <div id="statusIndicator" class="text-xs font-cinzel text-pink-300/80 tracking-widest">
-                    Floreciendo arrecife de luz...
+                <div id="statusIndicator" class="text-xs font-cinzel text-amber-300/80 tracking-widest">
+                    Floreciendo flor de luz...
                 </div>
             </div>
         </div>
 
-        <!-- Right Column: Interactive Letter Glass Container -->
         <div class="w-full lg:w-1/2 flex flex-col items-center">
             <div class="glass-card w-full p-6 md:p-8 rounded-2xl relative overflow-hidden flex flex-col justify-between min-h-[420px] max-h-[520px]">
-                
-                <!-- Card Header -->
-                <div class="flex items-center justify-between border-b border-cyan-500/20 pb-3 mb-4">
-                    <span class="text-xs font-cinzel text-cyan-300 tracking-widest uppercase">Carta Marina Eterna</span>
+
+                <div class="flex items-center justify-between border-b border-yellow-500/20 pb-3 mb-4">
+                    <span class="text-xs font-cinzel text-yellow-300 tracking-widest uppercase">Carta Eterna</span>
                     <span class="text-xs text-slate-400 font-mono" id="dateDisplay"></span>
                 </div>
 
-                <!-- Letter Content Area -->
                 <div class="custom-scroll overflow-y-auto pr-2 my-auto text-slate-200 leading-relaxed font-light text-sm md:text-base space-y-4">
                     <p id="typewriterText" class="inline whitespace-pre-wrap typing-cursor"></p>
                 </div>
 
-                <!-- Card Footer Actions -->
-                <div id="cardFooter" class="border-t border-cyan-500/20 pt-4 mt-4 flex flex-wrap items-center justify-between gap-3 opacity-0 transition-opacity duration-1000">
-                    <button id="replayBtn" class="text-xs text-cyan-300 hover:text-cyan-100 flex items-center gap-1.5 transition">
+                <div id="cardFooter" class="border-t border-yellow-500/20 pt-4 mt-4 flex flex-wrap items-center justify-between gap-3 opacity-0 transition-opacity duration-1000">
+                    <button id="replayBtn" class="text-xs text-yellow-300 hover:text-yellow-100 flex items-center gap-1.5 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                         </svg>
                         Repetir Florecimiento
                     </button>
 
-                    <button id="downloadBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white font-medium text-xs md:text-sm tracking-wide shadow-lg shadow-pink-500/20 hover:shadow-cyan-500/40 hover:scale-[1.02] active:scale-95 transition duration-300 flex items-center gap-2">
+                    <button id="downloadBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-slate-900 font-semibold text-xs md:text-sm tracking-wide shadow-lg shadow-yellow-500/30 hover:shadow-orange-500/50 hover:scale-[1.02] active:scale-95 transition duration-300 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
-                        Descargar Arte y Carta (.html)
+                        Descargar Carta (.html)
                     </button>
                 </div>
 
@@ -183,35 +137,30 @@
 
     </main>
 
-    <!-- Footer Copyright -->
-    <footer class="z-10 text-center text-[11px] text-cyan-300/40 font-cinzel mt-4">
-        Dedicado con amor puro a Scoly Kinzoo &bull; Un océano de luz propia
+    <footer class="z-10 text-center text-[11px] text-yellow-300/40 font-cinzel mt-4">
+        Dedicado con amor puro a Scoly Kinzoo &bull; 21 de septiembre, un jardín de luz propia
     </footer>
 
     <script>
-        // Set Current Date
-        document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('es-ES', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
+        // ===== FECHA =====
+        const fechaEspecial = new Date(2026, 8, 21);
+        document.getElementById('dateDisplay').textContent =
+            fechaEspecial.toLocaleDateString('es-ES', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
 
-        // Dedicated Letter Content for Scoly Kinzoo
         const letterLines = [
             "Para mi amada Scoly Kinzoo,",
-            "\n\nEn las profundidades donde el mundo suele ser oscuro y silencioso, tú floreces con colores que desafían a la propia luz.",
-            "\nComo esta criatura del océano, posees una belleza vibrante, única e inquebrantable que llena de vida todo lo que te rodea.",
-            "\n\nNo naciste para adaptarte a la calma de las mareas quietas, ni para permanecer a la sombra del arrecife.",
-            "\nNaciste para brillar con luz propia, para fascinar, para ser el centro radiante de tu propio universo.",
+            "\n\nHoy, 21 de septiembre, quiero regalarte una flor que nunca se marchita: una flor de luz amarilla, cálida como el sol que llevas dentro.",
+            "\nComo los pétalos que se abren uno a uno buscando el amanecer, así florece mi cariño por ti cada día.",
+            "\n\nNo eres una flor de invernadero, eres la que crece fuerte, la que gira hacia la luz y la comparte con quien la mira.",
+            "\nEres brillo propio, raíz profunda y pétalo suave al mismo tiempo.",
             "\n\nRecuérdalo en cada paso y en cada amanecer:",
-            "\n\n¡Nunca serás espectadora!"
+            "\n\n¡Nunca serás espectadora, siempre serás la luz!"
         ];
-
         const fullLetterText = letterLines.join("");
 
-        // ----------------------------------------------------
-        // 1. UNDERWATER BUBBLE CANVAS ENGINE
-        // ----------------------------------------------------
+        // ===== POLEN DORADO =====
         const bubbleCanvas = document.getElementById('bubbleCanvas');
         const bCtx = bubbleCanvas.getContext('2d');
         let bubbles = [];
@@ -223,339 +172,556 @@
         window.addEventListener('resize', resizeBubbleCanvas);
         resizeBubbleCanvas();
 
-        class Bubble {
-            constructor() {
-                this.reset();
-            }
+        class Pollen {
+            constructor() { this.reset(); }
             reset() {
                 this.x = Math.random() * bubbleCanvas.width;
                 this.y = bubbleCanvas.height + Math.random() * 50;
-                this.radius = Math.random() * 3 + 1;
-                this.speedY = Math.random() * 1.2 + 0.4;
-                this.speedX = Math.sin(Math.random() * Math.PI) * 0.5;
-                this.opacity = Math.random() * 0.5 + 0.2;
+                this.radius = Math.random() * 2.4 + 0.8;
+                this.speedY = Math.random() * 0.9 + 0.3;
+                this.opacity = Math.random() * 0.6 + 0.2;
+                this.hue = 40 + Math.random() * 20;
             }
             update() {
                 this.y -= this.speedY;
-                this.x += Math.sin(this.y * 0.02) * 0.4;
+                this.x += Math.sin(this.y * 0.02) * 0.5;
                 if (this.y < -10) this.reset();
             }
             draw() {
                 bCtx.beginPath();
                 bCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                bCtx.fillStyle = `rgba(186, 230, 253, ${this.opacity})`;
-                bCtx.shadowBlur = 4;
-                bCtx.shadowColor = '#38bdf8';
+                bCtx.fillStyle = `hsla(${this.hue}, 95%, 65%, ${this.opacity})`;
+                bCtx.shadowBlur = 8;
+                bCtx.shadowColor = '#facc15';
                 bCtx.fill();
                 bCtx.shadowBlur = 0;
             }
         }
-
-        for (let i = 0; i < 60; i++) {
-            bubbles.push(new Bubble());
-        }
+        for (let i = 0; i < 70; i++) bubbles.push(new Pollen());
 
         function animateBubbles() {
             bCtx.clearRect(0, 0, bubbleCanvas.width, bubbleCanvas.height);
-            bubbles.forEach(b => {
-                b.update();
-                b.draw();
-            });
+            bubbles.forEach(b => { b.update(); b.draw(); });
             requestAnimationFrame(animateBubbles);
         }
         animateBubbles();
 
-        // ----------------------------------------------------
-        // 2. THREE.JS 3D SCOLYMIA / CORAL FLOWER ORGANISM
-        // ----------------------------------------------------
+        // ===== THREE.JS =====
         const container = document.getElementById('threeContainer');
         const scene = new THREE.Scene();
 
-        // Camera
         const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-        camera.position.set(0, 3, 11);
+        camera.position.set(0, 4, 13);
+        camera.lookAt(0, 0.8, 0);
 
-        // Renderer
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.15;
         container.appendChild(renderer.domElement);
 
-        // Lights
-        const ambientLight = new THREE.AmbientLight(0x0e2a47, 1.8);
-        scene.add(ambientLight);
+        // ===== LUCES =====
+        scene.add(new THREE.AmbientLight(0x3a2f10, 1.4));
 
-        const topCyanLight = new THREE.DirectionalLight(0x38bdf8, 2.5);
-        topCyanLight.position.set(5, 12, 8);
-        scene.add(topCyanLight);
+        const sunLight = new THREE.DirectionalLight(0xfff2b0, 3.2);
+        sunLight.position.set(6, 12, 8);
+        scene.add(sunLight);
 
-        const pointPinkLight = new THREE.PointLight(0xf472b6, 3, 15);
-        pointPinkLight.position.set(-4, 2, 4);
-        scene.add(pointPinkLight);
+        const warmFill = new THREE.PointLight(0xffc93c, 2.4, 20);
+        warmFill.position.set(-5, 3, 4);
+        scene.add(warmFill);
 
-        const pointOrangeLight = new THREE.PointLight(0xf97316, 2.5, 15);
-        pointOrangeLight.position.set(4, -2, 4);
-        scene.add(pointOrangeLight);
+        const rimLight = new THREE.PointLight(0xff8a00, 2.0, 20);
+        rimLight.position.set(4, -1, -3);
+        scene.add(rimLight);
 
-        // Main Coral Group
-        const coralGroup = new THREE.Group();
-        scene.add(coralGroup);
+        const topHalo = new THREE.PointLight(0xffe066, 1.8, 15);
+        topHalo.position.set(0, 6, 2);
+        scene.add(topHalo);
 
-        // Coral Stem Base
-        const stemGeo = new THREE.CylinderGeometry(0.8, 1.4, 3.2, 32, 16);
-        // Deform stem to look organic
+        // ===== GRUPO FLOR =====
+        const flowerGroup = new THREE.Group();
+        scene.add(flowerGroup);
+
+        // ===== TALLO =====
+        const stemHeight = 4.2;
+        const stemGeo = new THREE.CylinderGeometry(0.1, 0.16, stemHeight, 16, 32);
         const stemPos = stemGeo.attributes.position;
         for (let i = 0; i < stemPos.count; i++) {
-            let vx = stemPos.getX(i);
-            let vy = stemPos.getY(i);
-            let vz = stemPos.getZ(i);
-            let noise = Math.sin(vy * 3) * 0.15;
-            stemPos.setX(i, vx + noise);
-            stemPos.setZ(i, vz + noise);
+            const vy = stemPos.getY(i);
+            const t = (vy + stemHeight / 2) / stemHeight;
+            const bend = Math.sin(t * Math.PI * 0.5) * 0.28;
+            stemPos.setX(i, stemPos.getX(i) + bend);
         }
         stemGeo.computeVertexNormals();
 
         const stemMat = new THREE.MeshStandardMaterial({
-            color: 0x1e293b,
-            roughness: 0.8,
-            metalness: 0.1,
-            flatShading: true
+            color: 0x3f6b2e,
+            roughness: 0.85,
+            metalness: 0.02
         });
         const stemMesh = new THREE.Mesh(stemGeo, stemMat);
-        stemMesh.position.y = -1.6;
-        coralGroup.add(stemMesh);
+        stemMesh.position.y = -stemHeight / 2 + 0.4;
+        flowerGroup.add(stemMesh);
 
-        // Coral Dome Polyps (Informed by image: vibrant tentacles/polyp cups with orange rims and cyan/blue centers)
-        const polypsGroup = new THREE.Group();
-        polypsGroup.position.y = 0.2;
-        coralGroup.add(polypsGroup);
+        // ===== HOJAS =====
+        function crearHoja(angulo, altura, escala = 1) {
+            const shape = new THREE.Shape();
+            shape.moveTo(0, 0);
+            shape.bezierCurveTo(0.5, 0.3, 0.7, 1.2, 0, 1.8);
+            shape.bezierCurveTo(-0.7, 1.2, -0.5, 0.3, 0, 0);
 
-        // Create Dome Base Surface
-        const domeRadius = 3.6;
-        const polypCount = 140;
-        const tentaclesList = [];
-
-        // Geometries for Polyp Cups & Tentacles
-        const cupGeo = new THREE.CylinderGeometry(0.24, 0.12, 0.35, 12);
-        const tentacleGeo = new THREE.ConeGeometry(0.06, 0.45, 8);
-
-        // Color palettes for polyps
-        const centerCyanColor = new THREE.Color(0x06b6d4);
-        const middlePurpleColor = new THREE.Color(0x8b5cf6);
-        const outerOrangeColor = new THREE.Color(0xf97316);
-
-        for (let i = 0; i < polypCount; i++) {
-            // Fibonacci Sphere distribution for even dome coverage
-            const phi = Math.acos(-1 + (2 * i) / polypCount);
-            const theta = Math.sqrt(polypCount * Math.PI) * phi;
-
-            // Constrain to top hemisphere dome
-            if (phi > Math.PI * 0.48) continue;
-
-            const x = domeRadius * Math.sin(phi) * Math.cos(theta);
-            const y = (domeRadius * 0.65) * Math.cos(phi);
-            const z = domeRadius * Math.sin(phi) * Math.sin(theta);
-
-            const polypHolder = new THREE.Group();
-            polypHolder.position.set(x, y, z);
-
-            // Orient towards normal direction
-            const normal = new THREE.Vector3(x, y * 1.5, z).normalize();
-            polypHolder.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), normal);
-
-            // Calculate color gradient based on distance from central apex
-            const distFromTop = Math.sqrt(x*x + z*z) / domeRadius;
-            let polypColor = new THREE.Color();
-            if (distFromTop < 0.35) {
-                polypColor.lerpColors(centerCyanColor, middlePurpleColor, distFromTop / 0.35);
-            } else {
-                polypColor.lerpColors(middlePurpleColor, outerOrangeColor, (distFromTop - 0.35) / 0.65);
-            }
-
-            // Polyp Cup
-            const cupMat = new THREE.MeshStandardMaterial({
-                color: polypColor,
-                roughness: 0.3,
-                metalness: 0.2,
-                emissive: polypColor,
-                emissiveIntensity: 0.35
+            const geo = new THREE.ShapeGeometry(shape, 24);
+            const mat = new THREE.MeshStandardMaterial({
+                color: 0x4a7c37,
+                side: THREE.DoubleSide,
+                roughness: 0.7,
+                metalness: 0.05
             });
-            const cupMesh = new THREE.Mesh(cupGeo, cupMat);
-            polypHolder.add(cupMesh);
+            const hoja = new THREE.Mesh(geo, mat);
 
-            // Inner Bioluminescent Core Dot
-            const coreGeo = new THREE.SphereGeometry(0.08, 8, 8);
-            const coreMat = new THREE.MeshBasicMaterial({ color: 0x67e8f9 });
-            const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-            coreMesh.position.y = 0.15;
-            polypHolder.add(coreMesh);
-
-            // Mini Tentacles around each polyp rim
-            const tentacleCount = 6;
-            for (let t = 0; t < tentacleCount; t++) {
-                const angle = (t / tentacleCount) * Math.PI * 2;
-                const tx = Math.cos(angle) * 0.2;
-                const tz = Math.sin(angle) * 0.2;
-
-                const tentMat = new THREE.MeshStandardMaterial({
-                    color: (distFromTop > 0.4) ? 0xfba518 : 0x38bdf8,
-                    emissive: (distFromTop > 0.4) ? 0xf59e0b : 0x0284c7,
-                    emissiveIntensity: 0.4,
-                    roughness: 0.2
-                });
-                const tentMesh = new THREE.Mesh(tentacleGeo, tentMat);
-                tentMesh.position.set(tx, 0.22, tz);
-                tentMesh.rotation.x = Math.PI * 0.15;
-                tentMesh.rotation.y = angle;
-
-                polypHolder.add(tentMesh);
-
-                // Keep reference for animated swaying movement
-                tentaclesList.push({
-                    mesh: tentMesh,
-                    baseRotX: Math.PI * 0.15,
-                    phase: Math.random() * Math.PI * 2
-                });
+            const pos = geo.attributes.position;
+            for (let i = 0; i < pos.count; i++) {
+                const x = pos.getX(i);
+                const y = pos.getY(i);
+                pos.setZ(i, Math.sin(y * 1.4) * 0.15 + Math.abs(x) * 0.1);
             }
+            geo.computeVertexNormals();
 
-            polypsGroup.add(polypHolder);
+            hoja.scale.setScalar(escala);
+            hoja.position.set(
+                Math.cos(angulo) * 0.15,
+                altura,
+                Math.sin(angulo) * 0.15
+            );
+            hoja.rotation.y = -angulo + Math.PI / 2;
+            hoja.rotation.z = -0.5 * Math.cos(angulo);
+            hoja.rotation.x = 0.6;
+            return hoja;
         }
 
-        // Initial scale for bloom animation
-        coralGroup.scale.set(0.01, 0.01, 0.01);
+        flowerGroup.add(crearHoja(Math.PI * 0.3, -1.8, 1.1));
+        flowerGroup.add(crearHoja(Math.PI * 1.1, -2.6, 0.95));
+        flowerGroup.add(crearHoja(Math.PI * 1.7, -1.4, 0.85));
 
-        // Mouse Drag / Touch Controls
+        // ===== GEOMETRÍA DEL PÉTALO (forma de tulipán/gota alargada) =====
+        function crearPetaloGeometry(longitud = 2.3, ancho = 1.0) {
+            const shape = new THREE.Shape();
+            shape.moveTo(0, 0);
+            // Forma de gota alargada tipo tulipán
+            shape.bezierCurveTo(ancho * 0.7, longitud * 0.2, ancho * 0.6, longitud * 0.8, 0, longitud);
+            shape.bezierCurveTo(-ancho * 0.6, longitud * 0.8, -ancho * 0.7, longitud * 0.2, 0, 0);
+
+            const extrudeSettings = {
+                depth: 0.08,
+                bevelEnabled: true,
+                bevelSegments: 6,
+                bevelSize: 0.08,
+                bevelThickness: 0.06,
+                curveSegments: 32
+            };
+            const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            geo.center();
+
+            // Curvatura natural (cóncava hacia dentro, como tulipán real)
+            const pos = geo.attributes.position;
+            for (let i = 0; i < pos.count; i++) {
+                const x = pos.getX(i);
+                const y = pos.getY(i);
+                const z = pos.getZ(i);
+                const distY = (y + longitud / 2) / longitud; // 0 base, 1 punta
+                // Curvatura hacia arriba
+                const curl = Math.pow(distY, 1.8) * 0.5;
+                // Bordes hacia abajo (cuchara)
+                const sideCurl = Math.pow(Math.abs(x) / (ancho * 0.7), 2.2) * -0.25;
+                pos.setZ(i, z + curl + sideCurl);
+            }
+            geo.computeVertexNormals();
+            return geo;
+        }
+
+        const petaloGeo = crearPetaloGeometry(2.3, 1.0);
+
+        // Tonos de amarillo
+        const amarillos = [
+            { color: 0xffd60a, emissive: 0xffb800, ei: 0.20 },
+            { color: 0xffc300, emissive: 0xffa000, ei: 0.22 },
+            { color: 0xffb703, emissive: 0xff8c00, ei: 0.24 },
+            { color: 0xffe066, emissive: 0xffd000, ei: 0.18 }
+        ];
+
+        // ===== 4 CAPAS DE PÉTALOS PARA REALISMO =====
+        // Cada capa tiene diferente ángulo de apertura - las exteriores casi horizontales,
+        // las interiores más erguidas (como tulipán real)
+        const capasConfig = [
+            { cantidad: 8,  radio: 1.15, inclinacionAbierta: 0.15, escala: 1.00, altura: 0.95, gapAngulo: 0.0 },  // Exterior, casi horizontal
+            { cantidad: 8,  radio: 0.90, inclinacionAbierta: 0.45, escala: 0.95, altura: 1.00, gapAngulo: 0.4 },  // Media-exterior
+            { cantidad: 7,  radio: 0.65, inclinacionAbierta: 0.75, escala: 0.85, altura: 1.05, gapAngulo: 0.2 },  // Media-interior
+            { cantidad: 6,  radio: 0.40, inclinacionAbierta: 1.05, escala: 0.72, altura: 1.10, gapAngulo: 0.6 }   // Interior, erguida
+        ];
+
+        const petalosList = [];
+        const abrirAnguloTotal = Math.PI / 2 + 0.35; // Cuánto rota cada pétalo al abrirse
+
+        capasConfig.forEach((capa, capaIdx) => {
+            for (let i = 0; i < capa.cantidad; i++) {
+                const angulo = (i / capa.cantidad) * Math.PI * 2 + capa.gapAngulo;
+                const tone = amarillos[(i + capaIdx) % amarillos.length];
+
+                const petaloMat = new THREE.MeshStandardMaterial({
+                    color: tone.color,
+                    emissive: tone.emissive,
+                    emissiveIntensity: 0, // Empieza apagado
+                    roughness: 0.55,
+                    metalness: 0.05,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 1
+                });
+
+                const petalo = new THREE.Mesh(petaloGeo, petaloMat);
+
+                // Posición circular alrededor del centro
+                petalo.position.set(
+                    Math.cos(angulo) * capa.radio,
+                    capa.altura,
+                    Math.sin(angulo) * capa.radio
+                );
+
+                // Rotación: orientarlo hacia afuera
+                petalo.rotation.y = -angulo + Math.PI / 2;
+
+                // Ángulo de apertura FINAL (flor abierta)
+                const rotFinalX = -Math.PI / 2 + capa.inclinacionAbierta + 0.35;
+                // Ángulo de apertura INICIAL (capullo cerrado) - pétalos pegados apuntando arriba
+                const rotInicialX = -Math.PI / 2 - 0.15; // Casi vertical, pétalos hacia arriba
+
+                petalo.rotation.x = rotInicialX;
+                petalo.rotation.z = (Math.random() - 0.5) * 0.08;
+
+                // Escala pequeña al inicio (capullo compacto)
+                petalo.scale.setScalar(0.85);
+
+                flowerGroup.add(petalo);
+
+                petalosList.push({
+                    mesh: petalo,
+                    material: petaloMat,
+                    rotInicialX: rotInicialX,       // Cerrado
+                    rotFinalX: rotFinalX,           // Abierto
+                    baseRotZ: petalo.rotation.z,
+                    phase: Math.random() * Math.PI * 2,
+                    angulo: angulo,
+                    capa: capaIdx,
+                    escalaInicial: 0.85,
+                    escalaFinal: capa.escala,
+                    openProgress: 0,
+                    openDelay: 0,
+                    baseEmissive: tone.ei,
+                    // Radio y altura para interpolación (pétalos se alejan al abrir)
+                    radioInicial: capa.radio * 0.3,  // Cerca del centro al inicio
+                    radioFinal: capa.radio,
+                    alturaInicial: capa.altura + 0.15,
+                    alturaFinal: capa.altura
+                });
+            }
+        });
+
+        // ===== CENTRO DE LA FLOR =====
+        const centroGroup = new THREE.Group();
+        centroGroup.position.y = 1.0;
+        centroGroup.scale.setScalar(0.01);
+        flowerGroup.add(centroGroup);
+
+        const discoGeo = new THREE.SphereGeometry(0.55, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+        discoGeo.scale(1, 0.35, 1);
+        const discoMat = new THREE.MeshStandardMaterial({
+            color: 0x6b4a1a,
+            roughness: 0.9,
+            metalness: 0.05,
+            emissive: 0x3a2408,
+            emissiveIntensity: 0.3
+        });
+        const disco = new THREE.Mesh(discoGeo, discoMat);
+        centroGroup.add(disco);
+
+        // Semillas
+        const semillaGeo = new THREE.SphereGeometry(0.045, 8, 8);
+        const semillaMat = new THREE.MeshStandardMaterial({
+            color: 0xffb703,
+            roughness: 0.4,
+            metalness: 0.3,
+            emissive: 0xff8c00,
+            emissiveIntensity: 0.5
+        });
+
+        for (let anillo = 0; anillo < 4; anillo++) {
+            const radioAnillo = 0.15 + anillo * 0.12;
+            const cantAnillo = 6 + anillo * 6;
+            for (let i = 0; i < cantAnillo; i++) {
+                const ang = (i / cantAnillo) * Math.PI * 2 + anillo * 0.3;
+                const semilla = new THREE.Mesh(semillaGeo, semillaMat);
+                semilla.position.set(
+                    Math.cos(ang) * radioAnillo,
+                    0.1 + Math.random() * 0.06,
+                    Math.sin(ang) * radioAnillo
+                );
+                centroGroup.add(semilla);
+            }
+        }
+
+        // Estambres
+        const estambreMat = new THREE.MeshStandardMaterial({
+            color: 0xffe066,
+            emissive: 0xffd000,
+            emissiveIntensity: 0.7,
+            roughness: 0.3
+        });
+        const anteraMat = new THREE.MeshStandardMaterial({
+            color: 0xff9d00,
+            emissive: 0xff7a00,
+            emissiveIntensity: 0.8,
+            roughness: 0.4
+        });
+
+        const estambresList = [];
+        const estambreCount = 42;
+        for (let i = 0; i < estambreCount; i++) {
+            const ang = (i / estambreCount) * Math.PI * 2 + Math.random() * 0.2;
+            const radio = 0.15 + Math.random() * 0.42;
+            const alto = 0.15 + Math.random() * 0.18;
+
+            const filGeo = new THREE.CylinderGeometry(0.008, 0.012, alto, 5);
+            const fil = new THREE.Mesh(filGeo, estambreMat);
+            fil.position.set(
+                Math.cos(ang) * radio,
+                0.08 + alto / 2,
+                Math.sin(ang) * radio
+            );
+            fil.rotation.z = (Math.random() - 0.5) * 0.4;
+            fil.rotation.x = (Math.random() - 0.5) * 0.4;
+            centroGroup.add(fil);
+
+            const antGeo = new THREE.SphereGeometry(0.03, 6, 6);
+            const ant = new THREE.Mesh(antGeo, anteraMat);
+            ant.position.set(
+                fil.position.x + Math.sin(fil.rotation.z) * alto,
+                0.08 + alto,
+                fil.position.z + Math.sin(fil.rotation.x) * alto
+            );
+            centroGroup.add(ant);
+
+            estambresList.push({ mesh: ant, phase: Math.random() * Math.PI * 2 });
+        }
+
+        // ===== CONTROLES =====
         let isDragging = false;
         let previousMousePosition = { x: 0, y: 0 };
         let targetRotationX = 0;
         let targetRotationY = 0;
-        let autoRotate = true;
+        let autoRotate = false;
 
         container.addEventListener('mousedown', (e) => {
             isDragging = true;
             previousMousePosition = { x: e.clientX, y: e.clientY };
         });
-
         container.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             const deltaX = e.clientX - previousMousePosition.x;
             const deltaY = e.clientY - previousMousePosition.y;
-
             targetRotationY += deltaX * 0.008;
             targetRotationX += deltaY * 0.008;
-
             previousMousePosition = { x: e.clientX, y: e.clientY };
         });
-
         window.addEventListener('mouseup', () => { isDragging = false; });
 
-        // Touch controls
         container.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
                 isDragging = true;
                 previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
             }
         });
-
         container.addEventListener('touchmove', (e) => {
             if (!isDragging || e.touches.length !== 1) return;
             const deltaX = e.touches[0].clientX - previousMousePosition.x;
             const deltaY = e.touches[0].clientY - previousMousePosition.y;
-
             targetRotationY += deltaX * 0.008;
             targetRotationX += deltaY * 0.008;
-
             previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
         });
-
         container.addEventListener('touchend', () => { isDragging = false; });
 
-        // Mouse Wheel Zoom
         container.addEventListener('wheel', (e) => {
             camera.position.z += e.deltaY * 0.005;
-            camera.position.z = Math.max(6, Math.min(18, camera.position.z));
+            camera.position.z = Math.max(7, Math.min(20, camera.position.z));
         }, { passive: true });
 
-        // Window Resize
         window.addEventListener('resize', () => {
             camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(container.clientWidth, container.clientHeight);
         });
 
-        // ----------------------------------------------------
-        // 3. ANIMATION LOOP & BLOOM SEQUENCE
-        // ----------------------------------------------------
-        let clock = new THREE.Clock();
+        // ===== VARIABLES =====
+        const statusIndicator = document.getElementById('statusIndicator');
+        const typewriterEl = document.getElementById('typewriterText');
+        const cardFooter = document.getElementById('cardFooter');
+        const flowerAura = document.getElementById('flowerAura');
+
+        let isTyping = false;
+        let bloomActivo = false;
+        let tiempoInicioBloom = 0;
+
+        // ===== LOOP DE ANIMACIÓN =====
+        const clock = new THREE.Clock();
 
         function animate3D() {
             requestAnimationFrame(animate3D);
+            const t = clock.getElapsedTime();
+            const ahora = performance.now() / 1000;
 
-            const elapsedTime = clock.getElapsedTime();
+            if (autoRotate) targetRotationY += 0.004;
+            flowerGroup.rotation.y += (targetRotationY - flowerGroup.rotation.y) * 0.05;
+            flowerGroup.rotation.x += (targetRotationX - flowerGroup.rotation.x) * 0.05;
 
-            // Continuous 3D rotation & Floating current motion
-            if (autoRotate) {
-                targetRotationY += 0.005;
+            flowerGroup.position.y = Math.sin(t * 1.2) * 0.15;
+            flowerGroup.rotation.z = Math.sin(t * 0.7) * 0.03;
+
+            // ===== APERTURA PÉTALO POR PÉTALO (como tulipán real) =====
+            if (bloomActivo) {
+                const tiempoTranscurrido = ahora - tiempoInicioBloom;
+                let todosListos = true;
+
+                petalosList.forEach(p => {
+                    const tiempoLocal = tiempoTranscurrido - p.openDelay;
+                    if (tiempoLocal < 0) {
+                        todosListos = false;
+                        return;
+                    }
+
+                    // Duración de apertura de cada pétalo: 1.4 segundos (bien visible)
+                    const dur = 1.4;
+                    let prog = Math.min(tiempoLocal / dur, 1);
+                    // Easing: empieza lento, acelera, frena (como apertura real)
+                    prog = prog < 0.5
+                        ? 4 * prog * prog * prog
+                        : 1 - Math.pow(-2 * prog + 2, 3) / 2;
+                    p.openProgress = prog;
+
+                    if (prog < 1) todosListos = false;
+
+                    // 1. ROTACIÓN: el pétalo se abre de vertical (cerrado) a inclinado (abierto)
+                    p.mesh.rotation.x = p.rotInicialX + (p.rotFinalX - p.rotInicialX) * prog;
+
+                    // 2. POSICIÓN: el pétalo se aleja del centro al abrirse
+                    const radioActual = p.radioInicial + (p.radioFinal - p.radioInicial) * prog;
+                    const alturaActual = p.alturaInicial + (p.alturaFinal - p.alturaInicial) * prog;
+                    p.mesh.position.x = Math.cos(p.angulo) * radioActual;
+                    p.mesh.position.z = Math.sin(p.angulo) * radioActual;
+                    p.mesh.position.y = alturaActual;
+
+                    // 3. ESCALA: crece ligeramente al abrirse
+                    const s = p.escalaInicial + (p.escalaFinal - p.escalaInicial) * prog;
+                    p.mesh.scale.setScalar(s);
+
+                    // 4. DESTELLO LUMINOSO: brillo que aparece al abrirse (efecto TikTok)
+                    const glowPulse = Math.sin(prog * Math.PI);
+                    p.material.emissiveIntensity = p.baseEmissive + glowPulse * 2.0;
+                });
+
+                // El centro aparece conforme se abren los pétalos
+                const progresoCentro = Math.min(tiempoTranscurrido / 2.0, 1);
+                centroGroup.scale.setScalar(Math.max(0.01, progresoCentro));
+
+                if (todosListos) {
+                    bloomActivo = false;
+                    petalosList.forEach(p => {
+                        p.material.emissiveIntensity = p.baseEmissive;
+                    });
+                    flowerAura.style.opacity = '0.85';
+                    container.classList.add('glowing');
+                }
+            } else {
+                // Flor completamente abierta: respiración y oscilación
+                petalosList.forEach((p) => {
+                    p.mesh.rotation.x = p.rotFinalX + Math.sin(t * 1.5 + p.phase) * 0.045;
+                    p.mesh.rotation.z = p.baseRotZ + Math.cos(t * 1.2 + p.phase) * 0.035;
+                });
+
+                const respiracion = 0.20 + Math.sin(t * 1.5) * 0.06;
+                petalosList.forEach(p => {
+                    p.material.emissiveIntensity = respiracion;
+                });
+
+                centroGroup.scale.setScalar(1);
             }
 
-            coralGroup.rotation.y += (targetRotationY - coralGroup.rotation.y) * 0.05;
-            coralGroup.rotation.x += (targetRotationX - coralGroup.rotation.x) * 0.05;
-
-            // Gentle floating on water current
-            coralGroup.position.y = Math.sin(elapsedTime * 1.5) * 0.25;
-            coralGroup.rotation.z = Math.sin(elapsedTime * 0.8) * 0.04;
-
-            // Swaying tentacles movement
-            tentaclesList.forEach((t, idx) => {
-                t.mesh.rotation.x = t.baseRotX + Math.sin(elapsedTime * 3 + t.phase) * 0.12;
+            estambresList.forEach((e) => {
+                e.mesh.position.y += Math.sin(t * 4 + e.phase) * 0.0008;
             });
 
             renderer.render(scene, camera);
         }
         animate3D();
 
-        // Sequential Growth & Bloom Control
-        const statusIndicator = document.getElementById('statusIndicator');
-        const typewriterEl = document.getElementById('typewriterText');
-        const cardFooter = document.getElementById('cardFooter');
-        const coralAura = document.getElementById('coralAura');
-
-        let isTyping = false;
-
+        // ===== SECUENCIA DE APERTURA =====
         function runSequence() {
-            // Reset
-            coralGroup.scale.set(0.01, 0.01, 0.01);
+            flowerGroup.scale.set(1, 1, 1);
+            flowerGroup.position.y = 0;
+            flowerGroup.rotation.set(0, 0, 0);
+            targetRotationX = 0;
+            targetRotationY = 0;
+            autoRotate = false;
+
             container.classList.remove('glowing');
-            coralAura.style.opacity = '0.3';
+            flowerAura.style.opacity = '0.15';
             typewriterEl.textContent = '';
             typewriterEl.classList.add('typing-cursor');
             cardFooter.style.opacity = '0';
             cardFooter.style.pointerEvents = 'none';
+            isTyping = false;
 
-            statusIndicator.textContent = "1. Germinando núcleo marino...";
+            // Reset: TODOS los pétalos a estado CERRADO (capullo)
+            petalosList.forEach(p => {
+                p.openProgress = 0;
+                p.mesh.rotation.x = p.rotInicialX;      // Cerrado (vertical)
+                p.mesh.rotation.z = p.baseRotZ;
+                p.mesh.position.x = Math.cos(p.angulo) * p.radioInicial;
+                p.mesh.position.z = Math.sin(p.angulo) * p.radioInicial;
+                p.mesh.position.y = p.alturaInicial;
+                p.mesh.scale.setScalar(p.escalaInicial);
+                p.material.emissiveIntensity = 0;
+            });
 
-            // Scale up coral smoothly (Bloom effect)
-            let scaleProgress = 0.01;
-            const growInterval = setInterval(() => {
-                scaleProgress += 0.03;
-                if (scaleProgress >= 1) {
-                    scaleProgress = 1;
-                    clearInterval(growInterval);
-                    statusIndicator.textContent = "2. Expandiendo tentáculos bioluminiscentes...";
-                    
-                    setTimeout(() => {
-                        statusIndicator.textContent = "3. Coral en plenitud • Escribiendo dedicatoria...";
-                        startTypewriter();
-                    }, 1200);
-                }
-                coralGroup.scale.set(scaleProgress, scaleProgress, scaleProgress);
-            }, 50);
+            centroGroup.scale.setScalar(0.01);
+
+            // Orden de apertura: EXTERIORES primero (como flor real que abre desde afuera)
+            const orden = [...petalosList].sort((a, b) => {
+                if (a.capa !== b.capa) return a.capa - b.capa; // capa 0 (exterior) primero
+                return a.angulo - b.angulo;
+            });
+
+            // Delay progresivo: cada pétalo abre 100ms después del anterior
+            orden.forEach((p, i) => {
+                p.openDelay = i * 0.10;
+            });
+
+            bloomActivo = true;
+            tiempoInicioBloom = performance.now() / 1000;
+
+            statusIndicator.textContent = "1. Abriendo pétalos al sol...";
+
+            const duracionBloom = orden.length * 0.10 + 1.5;
+            setTimeout(() => {
+                statusIndicator.textContent = "2. Escribiendo dedicatoria...";
+                startTypewriter();
+            }, duracionBloom * 1000);
         }
 
         function startTypewriter() {
             if (isTyping) return;
             isTyping = true;
-
             let charIndex = 0;
             const speed = 40;
 
@@ -570,47 +736,39 @@
                     triggerPostWritingFX();
                 }
             }
-
             typeNextChar();
         }
 
         function triggerPostWritingFX() {
-            // Radiant Aura & Enhanced Glow
             container.classList.add('glowing');
-            coralAura.style.opacity = '0.9';
-
-            statusIndicator.textContent = "✦ Escultura bioluminescente en giro continuo ✦";
-
-            // Reveal Footer Actions
+            flowerAura.style.opacity = '0.95';
+            statusIndicator.textContent = "✦ Flor de luz en giro continuo ✦";
             cardFooter.style.opacity = '1';
             cardFooter.style.pointerEvents = 'auto';
+
+            setTimeout(() => { autoRotate = true; }, 1500);
         }
 
-        // Replay Button
-        document.getElementById('replayBtn').addEventListener('click', () => {
-            runSequence();
-        });
+        document.getElementById('replayBtn').addEventListener('click', runSequence);
 
-        // Download Action
         document.getElementById('downloadBtn').addEventListener('click', () => {
             const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
             const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
-            
             const link = document.createElement('a');
             link.href = url;
-            link.download = "Para_Scoly_Kinzoo_Carta_Coral_3D.html";
+            link.download = "Para_Scoly_Kinzoo_21_Septiembre.html";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
         });
 
-        // Ambient Underwater Audio Synthesizer
+        // ===== AUDIO =====
         let audioCtx = null;
         let isSoundPlaying = false;
         let mainGain = null;
-        let osc1 = null, osc2 = null;
+        let osc1 = null, osc2 = null, osc3 = null;
 
         document.getElementById('soundToggle').addEventListener('click', () => {
             const soundText = document.getElementById('soundText');
@@ -620,36 +778,37 @@
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     audioCtx = new AudioContext();
                 }
-
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
+                if (audioCtx.state === 'suspended') audioCtx.resume();
 
                 mainGain = audioCtx.createGain();
                 mainGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-                mainGain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 3);
+                mainGain.gain.exponentialRampToValueAtTime(0.06, audioCtx.currentTime + 3);
 
                 osc1 = audioCtx.createOscillator();
                 osc2 = audioCtx.createOscillator();
+                osc3 = audioCtx.createOscillator();
 
                 osc1.type = 'sine';
                 osc2.type = 'sine';
+                osc3.type = 'triangle';
 
-                // Soft oceanic chords
-                osc1.frequency.setValueAtTime(146.83, audioCtx.currentTime); // D3
-                osc2.frequency.setValueAtTime(220.00, audioCtx.currentTime); // A3
+                osc1.frequency.setValueAtTime(196.00, audioCtx.currentTime);
+                osc2.frequency.setValueAtTime(293.66, audioCtx.currentTime);
+                osc3.frequency.setValueAtTime(392.00, audioCtx.currentTime);
 
                 const filter = audioCtx.createBiquadFilter();
                 filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(320, audioCtx.currentTime);
+                filter.frequency.setValueAtTime(500, audioCtx.currentTime);
 
                 osc1.connect(filter);
                 osc2.connect(filter);
+                osc3.connect(filter);
                 filter.connect(mainGain);
                 mainGain.connect(audioCtx.destination);
 
                 osc1.start();
                 osc2.start();
+                osc3.start();
 
                 isSoundPlaying = true;
                 soundText.textContent = "Ecos: Activados";
@@ -659,17 +818,15 @@
                     setTimeout(() => {
                         osc1?.stop();
                         osc2?.stop();
+                        osc3?.stop();
                     }, 1000);
                 }
                 isSoundPlaying = false;
-                soundText.textContent = "Ecos Marinos";
+                soundText.textContent = "Ecos de Campo";
             }
         });
 
-        // Start Sequence
-        window.addEventListener('DOMContentLoaded', () => {
-            runSequence();
-        });
+        window.addEventListener('DOMContentLoaded', runSequence);
     </script>
 </body>
 </html>
